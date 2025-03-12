@@ -4,7 +4,8 @@
 
 ## Recursos  
 - Extração de áudio de vídeos  
-- Redução de ruído e normalização de áudio   
+- Redução de ruído e normalização de áudio
+- Treinamento de modelo do so-vits-svc-fork para gerar uma voz personalizada
 - Transcrição e tradução automática (Whisper + Google Translate) 
 - Conversão de texto em fala (edge-tts)  
 - Geração de voz personalizada com **so-vits-svc-fork**   
