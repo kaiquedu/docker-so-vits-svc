@@ -1,0 +1,10 @@
+numpy==1.26.4
+scipy==1.15.2
+noisereduce==3.0.3
+pydub==0.25.1
+fastapi==0.111.1
+python-multipart==0.0.20
+httpx==0.28.1
+pytest==8.3.5
+deep-translator==1.11.4
+edge-tts==7.3.1

@@ -1,32 +1,23 @@
-FROM nvidia/cuda:12.1.1-devel-ubuntu22.04
+FROM nvidia/cuda:12.4.1-runtime-ubuntu22.04
 
-ENV DEBIAN_FRONTEND=noninteractive
-WORKDIR /app
+ENV DEBIAN_FRONTEND=noninteractive PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 WORK_DIR=/app/work
 
-RUN apt update && apt install -y \
-    ffmpeg \
-    git \
-    python3 \
-    python3-pip \
-    python3-dev \
-    libsndfile1 \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ffmpeg \
+        libsndfile1 \
+        python3 \
+        python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
+WORKDIR /app
 COPY requirements.txt .
-RUN python3 -m pip install --upgrade pip setuptools wheel \
-    && pip install -r requirements.txt
+RUN python3 -m pip install -r requirements.txt
 
-RUN git clone https://github.com/voicepaw/so-vits-svc-fork.git && \
-    cd so-vits-svc-fork && \
-    git checkout 0f015e32aada5cf7481f91bbe6758e574c9c5f39
+COPY dublagem ./dublagem
+COPY main.py .
 
-WORKDIR /app/so-vits-svc-fork
+RUN useradd --create-home app && mkdir -p /app/work && chown app /app/work
+USER app
 
-COPY scripts/ scripts/
-COPY main.py main.py
-
-RUN mkdir -p /app/so-vits-svc-fork/dataset_raw /app/so-vits-svc-fork/dataset_raw/voz /app/so-vits-svc-fork/input_videos /app/so-vits-svc-fork/output_audio
-
-EXPOSE 8000
-
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7580"]
+EXPOSE 7580
+CMD ["python3", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7580"]
